@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { crearProducto, obtenerTodosProductos, obtenerProducto, actualizarProducto, borrarProducto } = require('../controllers/products_controller');
+const { crearProducto, obtenerTodosProductos, obtenerProducto, actualizarProducto, borrarProducto, obtenerSiProductos, obtenerNoProductos } = require('../controllers/products_controller');
 const { existCategoria, existProducto, existUserId, isAdminUser } = require('../helpers/db_validator');
 const { validarJWT, validarCampos, esAdminRole, tieneRole } = require('../middlewares');
 
@@ -9,6 +9,8 @@ const router = Router();
 
 // //Obtener todos los productos - paginado
 router.get('/', obtenerTodosProductos);
+router.get('/not', obtenerNoProductos);
+router.get('/available', obtenerSiProductos);
 
 // //Obtener un producto por id
 router.get('/:id',[

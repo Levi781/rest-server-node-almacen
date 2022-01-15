@@ -25,6 +25,50 @@ const obtenerTodosProductos = async( req = request, res = response )=>{
     });
 
 }
+const obtenerNoProductos = async( req = request, res = response )=>{
+
+    const { desde = 0, hasta = 5 } = req.headers;
+    // const productos = await Producto.find({ state: true});
+    // const cantidad = await Producto.countDocuments();
+    const [ cantidad, productos] = await Promise.all(
+        [
+            Producto.countDocuments({ state:true }),
+            Producto.find({ state: true, disponible: false}).populate('category','name')
+        ]
+    );
+
+    // res.json(
+    //     productos
+    // );
+
+    res.json({
+        cantidad,
+        productos
+    });
+
+}
+const obtenerSiProductos = async( req = request, res = response )=>{
+
+    const { desde = 0, hasta = 5 } = req.headers;
+    // const productos = await Producto.find({ state: true});
+    // const cantidad = await Producto.countDocuments();
+    const [ cantidad, productos] = await Promise.all(
+        [
+            Producto.countDocuments({ state:true }),
+            Producto.find({ state: true, disponible: true }).populate('category','name')
+        ]
+    );
+
+    // res.json(
+    //     productos
+    // );
+
+    res.json({
+        cantidad,
+        productos
+    });
+
+}
 
 const obtenerProducto = async( req = request, res = response )=>{
 
@@ -48,7 +92,7 @@ const crearProducto = async(req = request, res = response)=>{
     const name  = req.body.name.toUpperCase();
     console.log( req.body );
 
-    const { description="Sin descripcion", idc, serie, idu, disponible=true} = req.body;
+    const { description="Sin descripcion", idc, serie, idu, disponible=true, img=""} = req.body;
 
     const productoDB = await Producto.findOne( {serie} );
 
@@ -76,7 +120,8 @@ const crearProducto = async(req = request, res = response)=>{
         user: idu,
         category: idc,
         serie,
-        disponible
+        disponible,
+        img
     }
     //Generamos la producto
     const producto = new Producto( data );
@@ -133,6 +178,8 @@ const borrarProducto = async( req, res)=>{
 module.exports = {
     crearProducto,
     obtenerTodosProductos,
+    obtenerNoProductos,
+    obtenerSiProductos,
     obtenerProducto,
     actualizarProducto,
     borrarProducto

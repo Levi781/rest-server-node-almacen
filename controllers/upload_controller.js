@@ -13,7 +13,7 @@ const cargarArchivo = async(req = request, res = response)=>{
     
     //
     try{
-        const pathCompleto = await subirArchivo(  req.files ,['txt', 'md'], 'textos');
+        const pathCompleto = await subirArchivo(  req.files ,['txt', 'md', 'png', 'jpg'], 'productos');
         res.json({
             nombre: pathCompleto
         });

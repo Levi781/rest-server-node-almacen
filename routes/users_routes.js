@@ -37,7 +37,7 @@ router.put(
     [
         check('id', 'No es un id Valido').isMongoId(),
         check('id').custom( existUserId ),
-        check('role').custom( esRolValido ),//otra validacion personalizada
+        //check('role').custom( esRolValido ),//otra validacion personalizada
         validarCampos
     ], 
     usuariosPut

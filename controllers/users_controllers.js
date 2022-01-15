@@ -13,7 +13,7 @@ const usuariosGet = async(req, res = response)=> {
     //     return res.json({ errors: 'No es un numero'});
     // }
 
-    const query = { state: true };
+    const query = { state: true, role: 'USER_ROLE'};
 
     // const usuarios  = await Usuario.find( query )
     //     .skip( Number(desde) )
@@ -24,8 +24,6 @@ const usuariosGet = async(req, res = response)=> {
     const [total, usuarios] = await Promise.all([
         Usuario.countDocuments( query ),
         Usuario.find( query )
-        .skip( Number(desde) )
-        .limit( Number(limite) )
     ]);
 
     res.json( { total, usuarios } );
@@ -51,14 +49,11 @@ const usuariosGetbyId = async(req, res = response)=> {
 const usuariosPut = async (req, res)=> {
 
     const { id } = req.params;
-    const { _id ,password, google, email, ... resto   } = req.body;
+    const {estado } = req.body;
+    console.log( req.params );
+    console.log( req.body );
 
-    if( password ){
-        const salt = bcrypjs.genSaltSync();//default 10
-        resto.password = bcrypjs.hashSync( password, salt );
-    }
-
-    const usuario = await Usuario.findByIdAndUpdate( id , resto);
+    const usuario = await Usuario.findByIdAndUpdate( id , { estado });
 
     res.json(usuario)
 }
@@ -67,7 +62,7 @@ const usuariosPost = async (req, res)=> {
 
 
     const { nombre, username ,email, password, role } = req.body;
-    const usuario = new Usuario({ nombre, username ,email, password, role });
+    const usuario = new Usuario({ nombre, username ,email, password, role, estado: false });
 
     //Encriptar la contraseña
     const salt = bcrypjs.genSaltSync();//default 10
